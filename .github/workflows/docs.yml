@@ -32,8 +32,6 @@ jobs:
         working-directory: docs
         env:
           JEKYLL_ENV: production
-          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
-          PAGES_REPO_NWO: ${{ github.repository }}
         run: bundle exec jekyll build --trace
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -1,10 +1,11 @@
 ---
-layout: page
 title: Troubleshooting
 description: Common setup, GPU and runtime problems.
 permalink: /troubleshooting/
+layout: default
+parent: Guide
+nav_order: 4
 ---
-
 ## `Could not locate third_party/contact_graspnet_pytorch`
 
 Initialize the submodule:

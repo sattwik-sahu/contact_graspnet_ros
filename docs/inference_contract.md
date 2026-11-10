@@ -1,12 +1,11 @@
 ---
-layout: page
 title: Inference Contract
 description: Inputs, outputs, shapes, dtypes and pose conventions.
 permalink: /inference-contract/
+layout: default
+parent: Reference
+nav_order: 3
 ---
-
-# Inference contract
-
 ## Inputs
 
 | Name | Shape | dtype | Units/frame | Notes |

@@ -1,12 +1,11 @@
 ---
-layout: page
 title: Deployment
 description: Pixi, Docker Compose, Zenoh and GitHub Pages.
 permalink: /deployment/
+layout: default
+parent: Guide
+nav_order: 3
 ---
-
-# Deployment
-
 ## Host (Pixi)
 
 ```bash
@@ -92,8 +91,7 @@ or use the `zenoh-router` service in `docker-compose.yaml`.
 ## GitHub Pages documentation
 
 The documentation site is built from `docs/` with the
-[Material Docs](https://github.com/fernandopasik/jekyll-theme-material-docs)
-Jekyll theme.
+[Just the Docs](https://github.com/just-the-docs/just-the-docs) Jekyll theme.
 
 - Site: https://sattwik-sahu.github.io/contact_graspnet_ros/
 - Source: `docs/`

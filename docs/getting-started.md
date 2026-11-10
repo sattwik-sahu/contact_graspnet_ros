@@ -1,10 +1,11 @@
 ---
-layout: page
 title: Getting Started
 description: Install, build and run the Contact-GraspNet ROS 2 wrapper.
 permalink: /getting-started/
+layout: default
+parent: Guide
+nav_order: 1
 ---
-
 ## Prerequisites
 
 - Linux x86_64

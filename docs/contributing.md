@@ -1,10 +1,11 @@
 ---
-layout: page
 title: Contributing
 description: Development workflow, submodule policy, tests and documentation.
 permalink: /contributing/
+layout: default
+parent: Project
+nav_order: 1
 ---
-
 ## Ground rules
 
 - The `third_party/contact_graspnet_pytorch` submodule is **read-only**. Do not
@@ -67,7 +68,7 @@ GPU tests may be skipped when CUDA is unavailable; mark them clearly.
 
 ## Documentation
 
-The documentation is a Jekyll site in `docs/` using the Material Docs theme.
+The documentation is a Jekyll site in `docs/` using the Just the Docs theme.
 
 ```bash
 cd docs
@@ -82,8 +83,8 @@ cd docs
 bundle exec jekyll build
 ```
 
-Add new pages under `docs/` with front matter and update the `content_table`
-navigation in `docs/_config.yml`. Internal links should use:
+Add new pages under `docs/` with Just the Docs front matter
+(`title`, `parent`, `nav_order`). Internal links should use:
 
 ```liquid
 [Page]({{ '/page/' | relative_url }})

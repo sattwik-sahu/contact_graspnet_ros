@@ -1,15 +1,9 @@
 ---
-layout: home
 title: Contact-GraspNet ROS 2
 description: A modular, Dockerized ROS 2 wrapper for Contact-GraspNet.
-hero_example: |
-  ```bash
-  pixi install -e jazzy
-  pixi run -e jazzy build
-  pixi run -e jazzy test
-  ```
+layout: home
+nav_order: 1
 ---
-
 ## What it does
 
 This repository wraps the PyTorch implementation of

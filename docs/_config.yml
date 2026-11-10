@@ -8,57 +8,34 @@ url: "https://sattwik-sahu.github.io"
 baseurl: "/contact_graspnet_ros"
 repository: sattwik-sahu/contact_graspnet_ros
 
-theme: jekyll-theme-material-docs
+theme: just-the-docs
 lang: en
 permalink: pretty
 markdown: kramdown
 highlighter: rouge
 
+search_enabled: true
+heading_anchors: true
+color_scheme: light
+back_to_top: true
+
+aux_links:
+  "GitHub Repository": https://github.com/sattwik-sahu/contact_graspnet_ros
+aux_links_new_tab: true
+
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: https://github.com/sattwik-sahu/contact_graspnet_ros
+gh_edit_branch: main
+gh_edit_source: docs
+gh_edit_view_mode: edit
+
+footer_content: >-
+  Contact-GraspNet ROS 2 wrapper. Wrapper code Apache-2.0; upstream model and
+  weights retain the NVIDIA license.
+
 plugins:
-  - jekyll-github-metadata
   - jekyll-seo-tag
-
-sass:
-  quiet_deps: true
-  style: compressed
-
-main_nav:
-  - title: Getting Started
-    url: /getting-started/
-  - title: ROS Interfaces
-    url: /ros-interfaces/
-  - title: Contributing
-    url: /contributing/
-
-content_table:
-  - title: Guide
-    links:
-      - title: Overview
-        url: /
-      - title: Getting Started
-        url: /getting-started/
-      - title: Configuration
-        url: /configuration/
-      - title: Deployment
-        url: /deployment/
-      - title: Troubleshooting
-        url: /troubleshooting/
-  - title: Reference
-    links:
-      - title: Architecture
-        url: /architecture/
-      - title: ROS Interfaces
-        url: /ros-interfaces/
-      - title: Inference Contract
-        url: /inference-contract/
-      - title: Design / PRD
-        url: /design/
-  - title: Project
-    links:
-      - title: Contributing
-        url: /contributing/
-      - title: License
-        url: /license/
 
 exclude:
   - Gemfile

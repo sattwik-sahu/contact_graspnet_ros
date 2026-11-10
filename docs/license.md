@@ -1,10 +1,11 @@
 ---
-layout: page
 title: License
 description: Wrapper and upstream licensing.
 permalink: /license/
+layout: default
+parent: Project
+nav_order: 2
 ---
-
 ## This wrapper
 
 The ROS 2 wrapper code in this repository is licensed under the **Apache-2.0**
