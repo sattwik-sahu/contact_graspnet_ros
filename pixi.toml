@@ -20,6 +20,7 @@ tqdm = "*"
 colcon-common-extensions = "*"
 cmake = "*"
 ninja = "*"
+make = "*"
 compilers = "*"
 pkg-config = "*"
 setuptools = "<80"
@@ -76,7 +77,7 @@ humble = { features = ["common", "humble"], solve-group = "humble" }
 scripts = ["scripts/activate.sh"]
 
 [tasks]
-build = "colcon build --base-paths src --symlink-install --build-base build/$ROS_DISTRO --install-base install/$ROS_DISTRO --cmake-args -DPython3_EXECUTABLE=$CONDA_PREFIX/bin/python -DPython3_ROOT_DIR=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+build = "colcon build --base-paths src --symlink-install --build-base build/$ROS_DISTRO --install-base install/$ROS_DISTRO --cmake-args -G Ninja -DPython3_EXECUTABLE=$CONDA_PREFIX/bin/python -DPython3_ROOT_DIR=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=RelWithDebInfo"
 test = "pytest -q src/contact_graspnet_ros/test"
 lint = "ruff check src"
 typecheck = "mypy src/contact_graspnet_ros/contact_graspnet_ros/core"
