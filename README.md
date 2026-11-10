@@ -41,8 +41,16 @@ The submodule is read-only. Do not edit it.
 pixi install -e jazzy
 pixi run -e jazzy build
 pixi run -e jazzy test
+
+# Terminal 1: Zenoh router
+pixi run -e jazzy zenohd
+
+# Terminal 2: node
 pixi run -e jazzy launch
 ```
+
+Alternatively, `pixi run -e jazzy ros2 launch contact_graspnet_ros graspnet_zenoh.launch.py`
+starts the router and node together.
 
 `pixi install` downloads ROS 2 Jazzy, PyTorch CUDA and the runtime dependencies.
 The first install is large. If your home filesystem is small, point the Pixi
