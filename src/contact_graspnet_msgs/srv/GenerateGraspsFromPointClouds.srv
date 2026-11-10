@@ -1,0 +1,10 @@
+sensor_msgs/PointCloud2 cloud
+sensor_msgs/PointCloud2 segment
+int32 segmap_id
+bool local_regions
+bool filter_grasps
+uint8 forward_passes
+---
+bool success
+string message
+contact_graspnet_msgs/GraspProposalArray grasps

@@ -1,0 +1,36 @@
+/**:
+  ros__parameters:
+    model_config: model.yaml
+    checkpoint_dir: third_party/contact_graspnet_pytorch/checkpoints/contact_graspnet/checkpoints
+    device: cuda
+
+    depth_topic: depth
+    camera_info_topic: camera_info
+    mask_topic: mask
+    output_frame: ""
+    sync_slop_s: 0.05
+
+    z_range: [0.2, 1.8]
+    local_regions: true
+    filter_grasps: true
+    skip_border_objects: false
+    segmap_id: 0
+    max_segments: 4
+
+    forward_passes: 1
+    first_thres: 0.15
+    second_thres: 0.15
+    num_samples: 200
+    max_farthest_points: 150
+    seed: 0
+
+    publish_markers: true
+    publish_contact_points: true
+    input_qos: sensor_data
+    output_qos: reliable
+    tf_timeout_s: 0.1
+    service_timeout_s: 5.0
+    diagnostics_rate_hz: 1.0
+
+    mask_mode: labels
+    depth_scale: 0.001

@@ -1,0 +1,71 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /ContactPoints1
+        - /GraspMarkers1
+      Splitter Ratio: 0.5
+    Tree Height: 600
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Grid
+      Cell Size: 0.1
+      Plane Cell Count: 20
+      Color: 160; 160; 164
+      Alpha: 0.3
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: TF
+      Marker Scale: 0.2
+      Show Arrows: true
+      Show Axes: true
+      Show Names: false
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: ContactPoints
+      Topic: /graspnet/contact_points
+      Queue Size: 10
+      Style: Points
+      Size (Pixels): 6
+      Color Transformer: FlatColor
+      Color: 0; 255; 0
+      Alpha: 1
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: GraspMarkers
+      Topic: /graspnet/markers
+      Queue Size: 10
+      Namespaces: {}
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 1.5
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.5
+      Pitch: 0.4
+      Yaw: 0.8
+Window Geometry:
+  Height: 900
+  Width: 1280
+  Displays:
+    collapsed: false
+  Hide Left Dock: false
+  Hide Right Dock: false

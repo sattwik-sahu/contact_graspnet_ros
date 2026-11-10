@@ -1,0 +1,103 @@
+[workspace]
+name = "contact_graspnet_ros"
+version = "0.1.0"
+description = "ROS 2 wrapper for Contact-GraspNet (PyTorch port)"
+authors = ["Contact-GraspNet ROS maintainers"]
+channels = ["https://prefix.dev/conda-forge"]
+platforms = ["linux-64"]
+
+[system-requirements]
+cuda = "12.9"
+
+[feature.common.dependencies]
+numpy = "*"
+scipy = "*"
+pyyaml = "*"
+py-opencv = "*"
+pillow = "*"
+trimesh = "*"
+tqdm = "*"
+colcon-common-extensions = "*"
+cmake = "*"
+ninja = "*"
+compilers = "*"
+pkg-config = "*"
+setuptools = "<80"
+pytest = "*"
+pytest-cov = "*"
+ruff = "*"
+mypy = "*"
+
+[feature.jazzy]
+channels = ["https://prefix.dev/robostack-jazzy"]
+
+[feature.jazzy.dependencies]
+python = "3.12.*"
+ros-jazzy-ros-base = "*"
+ros-jazzy-rmw-zenoh-cpp = "*"
+ros-jazzy-cv-bridge = "*"
+ros-jazzy-message-filters = "*"
+ros-jazzy-tf2-ros = "*"
+ros-jazzy-tf2-geometry-msgs = "*"
+ros-jazzy-visualization-msgs = "*"
+ros-jazzy-diagnostic-msgs = "*"
+ros-jazzy-sensor-msgs-py = "*"
+ros-jazzy-rosidl-default-generators = "*"
+ros-jazzy-rosidl-default-runtime = "*"
+ros-jazzy-ament-cmake-auto = "*"
+ros-jazzy-rviz2 = "*"
+ros-jazzy-launch-testing = "*"
+ros-jazzy-launch-testing-ament-cmake = "*"
+pytorch-gpu = "2.9.*"
+cuda-version = "12.9.*"
+
+[feature.jazzy.activation.env]
+ROS_DISTRO = "jazzy"
+RMW_IMPLEMENTATION = "rmw_zenoh_cpp"
+
+[feature.humble]
+channels = ["https://prefix.dev/robostack-humble"]
+
+[feature.humble.dependencies]
+# RoboStack's current Humble builds are not available for Python 3.10 on this
+# channel; 3.12 is the solvable secondary target.  Native Humble remains 3.10.
+python = "3.12.*"
+ros-humble-ros-base = "*"
+ros-humble-cv-bridge = "*"
+ros-humble-message-filters = "*"
+ros-humble-tf2-ros = "*"
+ros-humble-tf2-geometry-msgs = "*"
+ros-humble-visualization-msgs = "*"
+ros-humble-diagnostic-msgs = "*"
+ros-humble-sensor-msgs-py = "*"
+ros-humble-rosidl-default-generators = "*"
+ros-humble-rosidl-default-runtime = "*"
+ros-humble-ament-cmake-auto = "*"
+ros-humble-rviz2 = "*"
+ros-humble-launch-testing = "*"
+ros-humble-launch-testing-ament-cmake = "*"
+pytorch-gpu = "2.9.*"
+cuda-version = "12.9.*"
+
+[feature.humble.activation.env]
+ROS_DISTRO = "humble"
+# Zenoh is Jazzy-first; the Humble RoboStack Zenoh package is not currently
+# solvable with Python 3.10.  Use Fast DDS for the secondary environment.
+RMW_IMPLEMENTATION = "rmw_fastrtps_cpp"
+
+[environments]
+default = { features = ["common", "jazzy"], solve-group = "jazzy" }
+jazzy = { features = ["common", "jazzy"], solve-group = "jazzy" }
+humble = { features = ["common", "humble"], solve-group = "humble" }
+
+[activation]
+scripts = ["scripts/activate.sh"]
+
+[tasks]
+build = "colcon build --base-paths src --symlink-install --build-base build/$ROS_DISTRO --install-base install/$ROS_DISTRO --cmake-args -DPython3_EXECUTABLE=$CONDA_PREFIX/bin/python -DPython3_ROOT_DIR=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+test = "pytest -q src/contact_graspnet_ros/test"
+lint = "ruff check src"
+typecheck = "mypy src/contact_graspnet_ros/contact_graspnet_ros/core"
+launch = "ros2 launch contact_graspnet_ros graspnet.launch.py"
+zenohd = "ros2 run rmw_zenoh_cpp rmw_zenohd"
+clean = "rm -rf build install log"
