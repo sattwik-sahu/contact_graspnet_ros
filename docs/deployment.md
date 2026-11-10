@@ -1,3 +1,10 @@
+---
+layout: page
+title: Deployment
+description: Pixi, Docker Compose, Zenoh and GitHub Pages.
+permalink: /deployment/
+---
+
 # Deployment
 
 ## Host (Pixi)
@@ -5,7 +12,8 @@
 ```bash
 pixi install -e jazzy
 pixi run -e jazzy build
-pixi run -e jazzy launch
+pixi run -e jazzy zenohd   # terminal 1
+pixi run -e jazzy launch   # terminal 2
 ```
 
 The activation script sets:
@@ -14,6 +22,14 @@ The activation script sets:
 - `GRASPNET_CONFIG_DIR`
 - `PYTHONPATH` for the vendored port
 - `RMW_IMPLEMENTATION=rmw_zenoh_cpp` on Jazzy
+
+Call the service:
+
+```bash
+pixi run -e jazzy python scripts/call_grasp_service.py \
+  --input third_party/contact_graspnet_pytorch/test_data/7.npy \
+  --segmap-id 1
+```
 
 ## Docker
 
@@ -29,6 +45,9 @@ The root `docker-compose.yaml` includes
 The image contains the Pixi environment, colcon install space, wrapper source
 and vendored port source. It does **not** contain checkpoint weights; they are
 mounted read-only.
+
+Once the container is running, call `/graspnet/generate_grasps` from another
+ROS 2 container or from the host with the same RMW/router configuration.
 
 ### Mounts
 
@@ -69,6 +88,35 @@ pixi run -e jazzy zenohd
 ```
 
 or use the `zenoh-router` service in `docker-compose.yaml`.
+
+## GitHub Pages documentation
+
+The documentation site is built from `docs/` with the
+[Material Docs](https://github.com/fernandopasik/jekyll-theme-material-docs)
+Jekyll theme.
+
+- Site: https://sattwik-sahu.github.io/contact_graspnet_ros/
+- Source: `docs/`
+- Deployment workflow: `.github/workflows/docs.yml`
+- GitHub Pages source must be set to **GitHub Actions** in the repository
+  settings.
+
+The workflow rebuilds and deploys the site when `docs/**` changes on `main`.
+It can also be run manually with `workflow_dispatch`.
+
+Local preview:
+
+```bash
+cd docs
+bundle install
+bundle exec jekyll serve
+```
+
+## Docker CI
+
+`.github/workflows/docker.yml` builds the image with BuildKit on pushes that
+touch the Dockerfile, Pixi environment, source, config or submodule. It does
+not push an image; it only verifies that the image builds.
 
 ## Humble
 

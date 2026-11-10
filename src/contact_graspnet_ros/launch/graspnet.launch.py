@@ -1,4 +1,4 @@
-"""Launch the Contact-GraspNet ROS 2 node."""
+"""Launch the service-only Contact-GraspNet node."""
 
 from __future__ import annotations
 
@@ -6,7 +6,6 @@ import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
-from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -23,7 +22,6 @@ def _launch_setup(context, *args, **kwargs):
         params_file = os.path.join(config_dir, "graspnet.yaml")
 
     checkpoint_dir = LaunchConfiguration("checkpoint_dir").perform(context)
-    output_frame = LaunchConfiguration("output_frame").perform(context)
     namespace = LaunchConfiguration("namespace").perform(context)
     log_level = LaunchConfiguration("log_level").perform(context)
 
@@ -37,10 +35,8 @@ def _launch_setup(context, *args, **kwargs):
     ]
     if checkpoint_dir:
         parameters.append({"checkpoint_dir": checkpoint_dir})
-    if output_frame:
-        parameters.append({"output_frame": output_frame})
 
-    actions = [
+    return [
         Node(
             package="contact_graspnet_ros",
             executable="graspnet_node",
@@ -52,22 +48,6 @@ def _launch_setup(context, *args, **kwargs):
             emulate_tty=True,
         )
     ]
-
-    if LaunchConfiguration("rviz").perform(context).lower() in ("true", "1", "yes"):
-        rviz_config = os.path.join(config_dir, "rviz", "graspnet.rviz")
-        actions.append(
-            Node(
-                package="rviz2",
-                executable="rviz2",
-                name="graspnet_rviz",
-                namespace=namespace,
-                arguments=["-d", rviz_config],
-                condition=IfCondition(LaunchConfiguration("rviz")),
-                output="screen",
-            )
-        )
-
-    return actions
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -89,11 +69,6 @@ def generate_launch_description() -> LaunchDescription:
                 description="Directory containing model.pt; empty uses the YAML value",
             ),
             DeclareLaunchArgument(
-                "output_frame",
-                default_value="",
-                description="Optional TF target frame; empty keeps the camera optical frame",
-            ),
-            DeclareLaunchArgument(
                 "namespace",
                 default_value="graspnet",
                 description="Node namespace",
@@ -103,9 +78,6 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 "log_level", default_value="info", description="ROS log level"
-            ),
-            DeclareLaunchArgument(
-                "rviz", default_value="false", description="Start RViz2"
             ),
             OpaqueFunction(function=_launch_setup),
         ]

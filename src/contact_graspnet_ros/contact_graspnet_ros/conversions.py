@@ -1,16 +1,12 @@
-"""Conversions between ROS messages and the typed NumPy core."""
+"""Conversions between ROS service messages and the typed NumPy core."""
 
 from __future__ import annotations
 
 import numpy as np
 import numpy.typing as npt
-import rclpy.time
 from cv_bridge import CvBridge
 from geometry_msgs.msg import Point, Pose, Quaternion
-from rclpy.duration import Duration
-from sensor_msgs.msg import CameraInfo, Image, PointCloud2
-from sensor_msgs_py import point_cloud2
-from tf2_ros import Buffer
+from sensor_msgs.msg import CameraInfo, Image
 
 from contact_graspnet_ros.core.types import CameraIntrinsics, FloatArray, IntArray
 
@@ -59,8 +55,8 @@ def image_to_mask(message: Image, binary: bool = False) -> IntArray:
 def camera_info_to_intrinsics(message: CameraInfo) -> CameraIntrinsics:
     """Extract rectified intrinsics from a ``CameraInfo`` message.
 
-    The rectified projection matrix ``P`` is preferred.  If it is unset, the
-    raw intrinsic matrix ``K`` is used.
+    The rectified projection matrix ``P`` is preferred. If it is unset, the raw
+    intrinsic matrix ``K`` is used.
     """
 
     if len(message.p) == 12 and message.p[0] > 0.0 and message.p[5] > 0.0:
@@ -77,25 +73,6 @@ def camera_info_to_intrinsics(message: CameraInfo) -> CameraIntrinsics:
     if width <= 0 or height <= 0:
         raise ValueError(f"CameraInfo has invalid size {width}x{height}")
     return CameraIntrinsics(fx=fx, fy=fy, cx=cx, cy=cy, width=width, height=height)
-
-
-def pointcloud2_to_xyz(message: PointCloud2) -> FloatArray:
-    """Read x/y/z fields from a ``PointCloud2`` into an ``(N, 3)`` array."""
-
-    fields = {field.name for field in message.fields}
-    missing = {"x", "y", "z"} - fields
-    if missing:
-        raise ValueError(f"PointCloud2 is missing fields: {sorted(missing)}")
-
-    points = list(
-        point_cloud2.read_points(message, field_names=("x", "y", "z"), skip_nans=True)
-    )
-    if not points:
-        return np.empty((0, 3), dtype=np.float32)
-    array = np.asarray(points, dtype=np.float32)
-    if array.ndim != 2 or array.shape[1] < 3:
-        array = array.reshape(-1, 3)
-    return np.ascontiguousarray(array[:, :3], dtype=np.float32)
 
 
 def pose_from_matrix(matrix: npt.ArrayLike) -> Pose:
@@ -124,75 +101,6 @@ def pose_from_matrix(matrix: npt.ArrayLike) -> Pose:
             z=float(quaternion[2]),
             w=float(quaternion[3]),
         ),
-    )
-
-
-def transform_matrix_from_stamped(transform_stamped) -> npt.NDArray[np.float64]:
-    """Convert a ``TransformStamped`` to a 4x4 homogeneous matrix."""
-
-    translation = transform_stamped.transform.translation
-    rotation = transform_stamped.transform.rotation
-    matrix = np.eye(4, dtype=np.float64)
-    matrix[:3, :3] = _quaternion_to_rotation_matrix(
-        np.array([rotation.x, rotation.y, rotation.z, rotation.w], dtype=np.float64)
-    )
-    matrix[:3, 3] = [translation.x, translation.y, translation.z]
-    return matrix
-
-
-def lookup_transform_matrix(
-    buffer: Buffer,
-    target_frame: str,
-    source_frame: str,
-    stamp: rclpy.time.Time,
-    timeout_s: float,
-) -> npt.NDArray[np.float64]:
-    """Look up ``T_target_source`` at the given stamp."""
-
-    transform = buffer.lookup_transform(
-        target_frame,
-        source_frame,
-        stamp,
-        timeout=Duration(seconds=float(timeout_s)),
-    )
-    return transform_matrix_from_stamped(transform)
-
-
-def transform_pose_matrix(
-    matrix: npt.ArrayLike, transform: npt.ArrayLike
-) -> npt.NDArray[np.float32]:
-    """Apply a 4x4 transform to a 4x4 pose."""
-    return (
-        np.asarray(transform, dtype=np.float64) @ np.asarray(matrix, dtype=np.float64)
-    ).astype(np.float32)
-
-
-def transform_point(
-    point: npt.ArrayLike, transform: npt.ArrayLike
-) -> npt.NDArray[np.float32]:
-    """Apply a 4x4 transform to a 3D point."""
-    p = np.asarray(point, dtype=np.float64).reshape(3)
-    t = np.asarray(transform, dtype=np.float64).reshape(4, 4)
-    return (t[:3, :3] @ p + t[:3, 3]).astype(np.float32)
-
-
-def make_contact_cloud(header, points: npt.ArrayLike) -> PointCloud2:
-    """Create a ``PointCloud2`` from an ``(N, 3)`` contact-point array."""
-    array = np.asarray(points, dtype=np.float32).reshape(-1, 3)
-    return point_cloud2.create_cloud_xyz32(header, array.tolist())
-
-
-def _quaternion_to_rotation_matrix(
-    quaternion: npt.NDArray[np.float64],
-) -> npt.NDArray[np.float64]:
-    x, y, z, w = quaternion / max(np.linalg.norm(quaternion), 1e-12)
-    return np.array(
-        [
-            [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
-            [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
-            [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
-        ],
-        dtype=np.float64,
     )
 
 

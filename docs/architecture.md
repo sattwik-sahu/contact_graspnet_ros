@@ -1,11 +1,18 @@
+---
+layout: page
+title: Architecture
+description: Component layout, data flow and design boundaries.
+permalink: /architecture/
+---
+
 # Architecture
 
 ```text
-depth + camera_info + optional mask
+GenerateGrasps service request
+  depth + camera_info + optional mask
         │
         ▼
-rclpy node (contact_graspnet_ros/node.py)
-  message_filters.ApproximateTimeSynchronizer
+rclpy service node (contact_graspnet_ros/node.py)
         │
         ▼
 ContactGraspNetEngine (contact_graspnet_ros/core/engine.py)  ← ROS-free
@@ -17,8 +24,8 @@ ContactGraspNetEngine (contact_graspnet_ros/core/engine.py)  ← ROS-free
 GraspResult (poses, scores, widths, contacts, segment ids)
         │
         ▼
-conversions.py / markers.py / node.py
-  GraspProposalArray, PointCloud2, MarkerArray, DiagnosticArray
+conversions.py / node.py
+  GenerateGrasps response (GraspProposalArray)
 ```
 
 ## Why the core is ROS-free
@@ -37,13 +44,13 @@ its checkpoint. All orchestration and fixes live in our code.
 
 ## Threading
 
-- `MultiThreadedExecutor` with three threads.
+- `MultiThreadedExecutor` with two threads.
 - One `threading.Lock` guards the engine.
-- Topic frames are dropped when the lock is busy.
-- Services wait up to `service_timeout_s`, then return a busy failure.
+- Concurrent service calls wait up to `service_timeout_s`, then return a busy
+  failure.
 - This prevents unbounded queues and GPU oversubscription.
 
 ## Language choice
 
 The ROS node is Python for now. The engine boundary is narrow so a C++/LibTorch
-backend can be added later without changing topics, services or configuration.
+backend can be added later without changing the service interface or configuration.

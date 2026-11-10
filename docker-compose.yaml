@@ -27,11 +27,4 @@ services:
       retries: 30
     restart: unless-stopped
 
-  graspnet-echo:
-    image: ${GRASPNET_IMAGE:-contact_graspnet_ros:jazzy}
-    network_mode: host
-    environment:
-      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
-      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_zenoh_cpp}
-    command: ["ros2", "topic", "echo", "/graspnet/grasps", "--once"]
-    profiles: ["demo"]
+

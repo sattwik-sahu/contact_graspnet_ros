@@ -15,7 +15,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/GraspProposal.msg"
   "msg/GraspProposalArray.msg"
   "srv/GenerateGrasps.srv"
-  "srv/GenerateGraspsFromPointClouds.srv"
   DEPENDENCIES std_msgs geometry_msgs sensor_msgs
 )
 

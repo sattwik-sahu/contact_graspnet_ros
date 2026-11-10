@@ -1,6 +1,17 @@
-# PRD — Contact-GraspNet ROS 2 wrapper (Python `rclpy` package, PyTorch backend)
+---
+layout: page
+title: Design and PRD
+description: Product requirements and design record for the wrapper.
+permalink: /design/
+---
 
-**Status:** Implementation in progress (M0–M3 vertical slice)  
+# Design and PRD
+
+> This is the historical design record. For task-oriented documentation, start with [Getting Started]({{ '/getting-started/' | relative_url }}).
+>
+> **Delivered scope:** the implemented wrapper is service-only. Topic subscriptions, output streams, RViz markers, TF output transforms and diagnostics were removed by decision; the sections below describe the earlier design and remain for context.
+
+**Status:** Implemented for Jazzy; Humble and CI image build pending verification  
 **Revision:** 2 — Python-only; supersedes the C++/pybind11 architecture  
 **Branch:** `dev/feature/ros2-jazzy`  
 **Note:** This PRD is kept in the repository as the design record. The current

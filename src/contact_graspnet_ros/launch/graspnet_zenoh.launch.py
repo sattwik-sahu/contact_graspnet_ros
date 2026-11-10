@@ -1,4 +1,4 @@
-"""Start the Zenoh router and the Contact-GraspNet node."""
+"""Start the Zenoh router and the service-only Contact-GraspNet node."""
 
 from __future__ import annotations
 
@@ -34,10 +34,8 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             "config_dir": LaunchConfiguration("config_dir"),
             "checkpoint_dir": LaunchConfiguration("checkpoint_dir"),
-            "output_frame": LaunchConfiguration("output_frame"),
             "namespace": LaunchConfiguration("namespace"),
             "use_sim_time": LaunchConfiguration("use_sim_time"),
-            "rviz": LaunchConfiguration("rviz"),
         }.items(),
     )
 
@@ -53,10 +51,8 @@ def generate_launch_description() -> LaunchDescription:
                 "checkpoint_dir",
                 default_value=os.environ.get("GRASPNET_CHECKPOINT_DIR", ""),
             ),
-            DeclareLaunchArgument("output_frame", default_value=""),
             DeclareLaunchArgument("namespace", default_value="graspnet"),
             DeclareLaunchArgument("use_sim_time", default_value="false"),
-            DeclareLaunchArgument("rviz", default_value="false"),
             DeclareLaunchArgument("start_router", default_value="true"),
             router,
             TimerAction(period=2.0, actions=[graspnet]),

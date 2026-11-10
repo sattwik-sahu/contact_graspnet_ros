@@ -5,6 +5,10 @@
 build
 install
 log
+docs
+.venv
+venv
+vendor
 __pycache__
 **/__pycache__
 *.py[cod]

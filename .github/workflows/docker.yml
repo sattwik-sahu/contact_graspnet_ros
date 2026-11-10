@@ -1,0 +1,47 @@
+name: Docker build
+
+on:
+  push:
+    branches: [main, "dev/**"]
+    paths:
+      - "docker/**"
+      - "docker-compose.yaml"
+      - "pixi.toml"
+      - "pixi.lock"
+      - "src/**"
+      - "config/**"
+      - "third_party/**"
+      - ".gitmodules"
+      - ".github/workflows/docker.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune -af
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          load: false
+          build-args: |
+            PIXI_ENV=jazzy
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

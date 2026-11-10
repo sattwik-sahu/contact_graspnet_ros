@@ -1,4 +1,4 @@
-"""ROS parameter parsing and validation for the Contact-GraspNet node."""
+"""ROS parameter parsing and validation for the service-only node."""
 
 from __future__ import annotations
 
@@ -20,11 +20,6 @@ class NodeConfig:
     model_config_path: Path
     checkpoint_dir: Path
     device: str
-    depth_topic: str
-    camera_info_topic: str
-    mask_topic: str
-    output_frame: str
-    sync_slop_s: float
     z_range: tuple[float, float]
     local_regions: bool
     filter_grasps: bool
@@ -37,13 +32,7 @@ class NodeConfig:
     num_samples: int
     max_farthest_points: int
     seed: int
-    publish_markers: bool
-    publish_contact_points: bool
-    input_qos: str
-    output_qos: str
-    tf_timeout_s: float
     service_timeout_s: float
-    diagnostics_rate_hz: float
     mask_mode: str
     depth_scale: float
 
@@ -68,7 +57,7 @@ class NodeConfig:
 
     @classmethod
     def declare_and_read(cls, node: Node) -> NodeConfig:
-        """Declare all parameters with defaults and return a validated config."""
+        """Declare service parameters with defaults and return a validated config."""
 
         if not node.has_parameter("use_sim_time"):
             node.declare_parameter("use_sim_time", False)
@@ -81,13 +70,6 @@ class NodeConfig:
             ).value
         )
         device = str(node.declare_parameter("device", "cuda").value)
-        depth_topic = str(node.declare_parameter("depth_topic", "depth").value)
-        camera_info_topic = str(
-            node.declare_parameter("camera_info_topic", "camera_info").value
-        )
-        mask_topic = str(node.declare_parameter("mask_topic", "mask").value)
-        output_frame = str(node.declare_parameter("output_frame", "").value)
-        sync_slop_s = float(node.declare_parameter("sync_slop_s", 0.05).value)
         z_range_value = node.declare_parameter("z_range", [0.2, 1.8]).value
         local_regions = bool(node.declare_parameter("local_regions", True).value)
         filter_grasps = bool(node.declare_parameter("filter_grasps", True).value)
@@ -104,18 +86,8 @@ class NodeConfig:
             node.declare_parameter("max_farthest_points", 150).value
         )
         seed = int(node.declare_parameter("seed", 0).value)
-        publish_markers = bool(node.declare_parameter("publish_markers", True).value)
-        publish_contact_points = bool(
-            node.declare_parameter("publish_contact_points", True).value
-        )
-        input_qos = str(node.declare_parameter("input_qos", "sensor_data").value)
-        output_qos = str(node.declare_parameter("output_qos", "reliable").value)
-        tf_timeout_s = float(node.declare_parameter("tf_timeout_s", 0.1).value)
         service_timeout_s = float(
             node.declare_parameter("service_timeout_s", 5.0).value
-        )
-        diagnostics_rate_hz = float(
-            node.declare_parameter("diagnostics_rate_hz", 1.0).value
         )
         mask_mode = str(node.declare_parameter("mask_mode", "labels").value)
         depth_scale = float(node.declare_parameter("depth_scale", 0.001).value)
@@ -131,11 +103,6 @@ class NodeConfig:
             model_config_path=_resolve_model_config(model_config),
             checkpoint_dir=_resolve_checkpoint_dir(checkpoint_dir),
             device=device,
-            depth_topic=depth_topic,
-            camera_info_topic=camera_info_topic,
-            mask_topic=mask_topic,
-            output_frame=output_frame,
-            sync_slop_s=sync_slop_s,
             z_range=z_range,
             local_regions=local_regions,
             filter_grasps=filter_grasps,
@@ -148,13 +115,7 @@ class NodeConfig:
             num_samples=num_samples,
             max_farthest_points=max_farthest_points,
             seed=seed,
-            publish_markers=publish_markers,
-            publish_contact_points=publish_contact_points,
-            input_qos=input_qos,
-            output_qos=output_qos,
-            tf_timeout_s=tf_timeout_s,
             service_timeout_s=service_timeout_s,
-            diagnostics_rate_hz=diagnostics_rate_hz,
             mask_mode=mask_mode,
             depth_scale=depth_scale,
         )
@@ -176,35 +137,24 @@ class NodeConfig:
             raise ConfigError(
                 f"max_farthest_points must be >= 1, got {self.max_farthest_points}"
             )
+        if not (0.0 <= self.first_thres <= 1.0):
+            raise ConfigError(f"first_thres must be in [0, 1], got {self.first_thres}")
+        if not (0.0 <= self.second_thres <= 1.0):
+            raise ConfigError(
+                f"second_thres must be in [0, 1], got {self.second_thres}"
+            )
         if self.depth_scale <= 0.0:
             raise ConfigError(f"depth_scale must be positive, got {self.depth_scale}")
-        if self.sync_slop_s < 0.0:
-            raise ConfigError(f"sync_slop_s must be >= 0, got {self.sync_slop_s}")
         if self.service_timeout_s <= 0.0:
             raise ConfigError(
                 f"service_timeout_s must be positive, got {self.service_timeout_s}"
             )
-        if self.diagnostics_rate_hz <= 0.0:
-            raise ConfigError(
-                f"diagnostics_rate_hz must be positive, got {self.diagnostics_rate_hz}"
-            )
         if self.device not in ("cuda", "cpu", "auto"):
             raise ConfigError(f"device must be cuda, cpu or auto, got {self.device!r}")
-        if self.input_qos not in ("sensor_data", "default"):
-            raise ConfigError(
-                f"input_qos must be sensor_data or default, got {self.input_qos!r}"
-            )
-        if self.output_qos not in ("reliable", "sensor_data"):
-            raise ConfigError(
-                f"output_qos must be reliable or sensor_data, got {self.output_qos!r}"
-            )
         if self.mask_mode not in ("labels", "binary"):
             raise ConfigError(
                 f"mask_mode must be labels or binary, got {self.mask_mode!r}"
             )
-        # A mask may come from the topic or from a service request.  The engine
-        # validates that a mask is present when local_regions/filter_grasps is
-        # requested, so an empty mask_topic is valid for service-only setups.
         if not self.model_config_path.is_file():
             raise ConfigError(f"model_config not found: {self.model_config_path}")
         if not self.checkpoint_path.is_file():

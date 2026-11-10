@@ -1,3 +1,10 @@
+---
+layout: page
+title: Inference Contract
+description: Inputs, outputs, shapes, dtypes and pose conventions.
+permalink: /inference-contract/
+---
+
 # Inference contract
 
 ## Inputs
