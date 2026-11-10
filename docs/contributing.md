@@ -1,11 +1,5 @@
----
-title: Contributing
-description: Development workflow, submodule policy, tests and documentation.
-permalink: /contributing/
-layout: default
-parent: Project
-nav_order: 1
----
+# Contributing
+
 ## Ground rules
 
 - The `third_party/contact_graspnet_pytorch` submodule is **read-only**. Do not
@@ -68,26 +62,24 @@ GPU tests may be skipped when CUDA is unavailable; mark them clearly.
 
 ## Documentation
 
-The documentation is a Jekyll site in `docs/` using the Just the Docs theme.
+The documentation is a MkDocs site in `docs/` using Material for MkDocs.
 
 ```bash
-cd docs
-bundle install
-bundle exec jekyll serve
+pip install -r docs/requirements.txt
+mkdocs serve
 ```
 
 Before committing docs changes:
 
 ```bash
-cd docs
-bundle exec jekyll build
+mkdocs build --strict
 ```
 
-Add new pages under `docs/` with Just the Docs front matter
-(`title`, `parent`, `nav_order`). Internal links should use:
+Add new pages under `docs/`, add them to the `nav` in `mkdocs.yml`, and use
+standard relative Markdown links:
 
-```liquid
-[Page]({{ '/page/' | relative_url }})
+```markdown
+[Getting Started](getting-started.md)
 ```
 
 ## Pull request checklist

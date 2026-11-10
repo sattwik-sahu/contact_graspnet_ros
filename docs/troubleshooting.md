@@ -1,11 +1,5 @@
----
-title: Troubleshooting
-description: Common setup, GPU and runtime problems.
-permalink: /troubleshooting/
-layout: default
-parent: Guide
-nav_order: 4
----
+# Troubleshooting
+
 ## `Could not locate third_party/contact_graspnet_pytorch`
 
 Initialize the submodule:

@@ -1,11 +1,5 @@
----
-title: Architecture
-description: Component layout, data flow and design boundaries.
-permalink: /architecture/
-layout: default
-parent: Reference
-nav_order: 1
----
+# Architecture
+
 ```text
 GenerateGrasps service request
   depth + camera_info + optional mask

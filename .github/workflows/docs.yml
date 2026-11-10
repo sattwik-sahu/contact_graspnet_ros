@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "mkdocs.yml"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -22,21 +23,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/setup-python@v5
         with:
-          ruby-version: "3.3"
+          python-version: "3.12"
       - name: Install docs dependencies
-        working-directory: docs
-        run: bundle install --jobs 4 --retry 3
+        run: pip install -r docs/requirements.txt
       - name: Build docs
-        working-directory: docs
-        env:
-          JEKYLL_ENV: production
-        run: bundle exec jekyll build --trace
+        run: mkdocs build --strict
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/_site
+          path: site
 
   deploy:
     environment:

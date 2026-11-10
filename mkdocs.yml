@@ -1,0 +1,76 @@
+site_name: Contact-GraspNet ROS 2
+site_description: >-
+  A modular, Dockerized ROS 2 wrapper for Contact-GraspNet. Depth, camera
+  intrinsics and an optional segmentation mask in; typed 6-DoF grasp proposals
+  out.
+site_url: https://sattwik-sahu.github.io/contact_graspnet_ros/
+repo_url: https://github.com/sattwik-sahu/contact_graspnet_ros
+repo_name: sattwik-sahu/contact_graspnet_ros
+edit_uri: edit/main/docs/
+copyright: Contact-GraspNet ROS 2 wrapper. Wrapper code Apache-2.0.
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Getting Started: getting-started.md
+      - Configuration: configuration.md
+      - Deployment: deployment.md
+      - Troubleshooting: troubleshooting.md
+  - Reference:
+      - Architecture: architecture.md
+      - ROS Interfaces: ros-interfaces.md
+      - Inference Contract: inference-contract.md
+      - Design / PRD: design.md
+  - Project:
+      - Contributing: contributing.md
+      - License: license.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets

@@ -1,11 +1,5 @@
----
-title: ROS Interfaces
-description: The GenerateGrasps service, messages and frame conventions.
-permalink: /ros-interfaces/
-layout: default
-parent: Reference
-nav_order: 2
----
+# ROS Interfaces
+
 The wrapper is **service-only**. It does not subscribe to sensor topics or
 stream output topics. A caller supplies a depth image, camera intrinsics and an
 optional mask, and receives a list of grasp proposals.
@@ -71,7 +65,7 @@ int32 segment_id
 
 The response header carries the input camera frame and timestamp. Poses are
 gripper-base poses in the camera optical frame; see
-[Inference Contract]({{ '/inference-contract/' | relative_url }}).
+[Inference Contract](inference-contract.md).
 
 ## Calling the service
 

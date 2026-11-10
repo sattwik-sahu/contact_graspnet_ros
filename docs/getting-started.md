@@ -1,11 +1,5 @@
----
-title: Getting Started
-description: Install, build and run the Contact-GraspNet ROS 2 wrapper.
-permalink: /getting-started/
-layout: default
-parent: Guide
-nav_order: 1
----
+# Getting Started
+
 ## Prerequisites
 
 - Linux x86_64
@@ -89,7 +83,7 @@ pixi run -e jazzy python scripts/call_grasp_service.py \
   --segmap-id 1
 ```
 
-See [ROS Interfaces]({{ '/ros-interfaces/' | relative_url }}) for the request
+See [ROS Interfaces](ros-interfaces.md) for the request
 and response schema.
 
 ## 5. Validate without ROS
@@ -113,13 +107,13 @@ The root `docker-compose.yaml` includes
 `docker/compose.contact_graspnet.yaml` and starts a Zenoh router. The checkpoint
 is mounted read-only; it is not baked into the image.
 
-See [Deployment]({{ '/deployment/' | relative_url }}) for Compose integration
+See [Deployment](deployment.md) for Compose integration
 and configuration mounts.
 
 ## Next steps
 
-- Tune parameters in [Configuration]({{ '/configuration/' | relative_url }}).
+- Tune parameters in [Configuration](configuration.md).
 - Learn the pose and frame conventions in
-  [Inference Contract]({{ '/inference-contract/' | relative_url }}).
-- Read [Contributing]({{ '/contributing/' | relative_url }}) before opening a
+  [Inference Contract](inference-contract.md).
+- Read [Contributing](contributing.md) before opening a
   pull request.

@@ -1,11 +1,5 @@
----
-title: Configuration
-description: ROS parameters, model configuration and path overrides.
-permalink: /configuration/
-layout: default
-parent: Guide
-nav_order: 2
----
+# Configuration
+
 All pipeline configuration lives in the repository's `config/` directory.
 
 ```text

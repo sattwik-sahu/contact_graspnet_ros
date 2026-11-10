@@ -1,9 +1,5 @@
----
-title: Contact-GraspNet ROS 2
-description: A modular, Dockerized ROS 2 wrapper for Contact-GraspNet.
-layout: home
-nav_order: 1
----
+# Contact-GraspNet ROS 2
+
 ## What it does
 
 This repository wraps the PyTorch implementation of
@@ -43,8 +39,8 @@ project.
 
 | Start here | Reference | Project |
 |---|---|---|
-| [Getting Started]({{ '/getting-started/' | relative_url }}) | [Architecture]({{ '/architecture/' | relative_url }}) | [Contributing]({{ '/contributing/' | relative_url }}) |
-| [Configuration]({{ '/configuration/' | relative_url }}) | [ROS Interfaces]({{ '/ros-interfaces/' | relative_url }}) | [License]({{ '/license/' | relative_url }}) |
-| [Deployment]({{ '/deployment/' | relative_url }}) | [Inference Contract]({{ '/inference-contract/' | relative_url }}) | [Design / PRD]({{ '/design/' | relative_url }}) |
+| [Getting Started](getting-started.md) | [Architecture](architecture.md) | [Contributing](contributing.md) |
+| [Configuration](configuration.md) | [ROS Interfaces](ros-interfaces.md) | [License](license.md) |
+| [Deployment](deployment.md) | [Inference Contract](inference-contract.md) | [Design / PRD](design.md) |
 
 Source: [sattwik-sahu/contact_graspnet_ros](https://github.com/sattwik-sahu/contact_graspnet_ros)

@@ -33,15 +33,9 @@ htmlcov/
 .tox/
 .nox/
 
-# Jekyll / GitHub Pages
-docs/_site/
-docs/.jekyll-cache/
-docs/.jekyll-metadata
-docs/.bundle/
-docs/vendor/
-.bundle/
-vendor/bundle/
-*.gem
+# MkDocs / GitHub Pages
+site/
+.cache/
 
 # Editor / OS
 .vscode/

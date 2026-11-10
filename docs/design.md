@@ -1,12 +1,6 @@
----
-title: Design / PRD
-description: Product requirements and design record for the wrapper.
-permalink: /design/
-layout: default
-parent: Reference
-nav_order: 4
----
-> This is the historical design record. For task-oriented documentation, start with [Getting Started]({{ '/getting-started/' | relative_url }}).
+# Design / PRD
+
+> This is the historical design record. For task-oriented documentation, start with [Getting Started](getting-started.md).
 >
 > **Delivered scope:** the implemented wrapper is service-only. Topic subscriptions, output streams, RViz markers, TF output transforms and diagnostics were removed by decision; the sections below describe the earlier design and remain for context.
 

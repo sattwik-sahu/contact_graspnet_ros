@@ -6,6 +6,8 @@ build
 install
 log
 docs
+site
+.cache
 .venv
 venv
 vendor
