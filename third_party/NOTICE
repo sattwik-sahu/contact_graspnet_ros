@@ -1,0 +1,17 @@
+This repository vendors the PyTorch Contact-GraspNet port as a git submodule at
+third_party/contact_graspnet_pytorch.
+
+Upstream:
+  https://github.com/elchun/contact_graspnet_pytorch
+
+The submodule is read-only in this project. The ROS wrapper uses only:
+  - contact_graspnet_pytorch.contact_graspnet.ContactGraspnet
+  - checkpoints/contact_graspnet/checkpoints/model.pt
+
+The wrapper's core/geometry.py is a typed, headless adaptation of pure NumPy
+helpers from the upstream port (depth-to-point-cloud, regularization, farthest
+point selection, filtering and 6-DoF grasp construction). It is covered by the
+upstream license.
+
+The upstream repository includes License.pdf. Review it before redistributing
+the model weights or a container image that contains them.

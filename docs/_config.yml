@@ -1,0 +1,69 @@
+title: Contact-GraspNet ROS 2
+description: >-
+  A modular, Dockerized ROS 2 wrapper for Contact-GraspNet. Depth, camera
+  intrinsics and an optional segmentation mask in; typed 6-DoF grasp proposals
+  out.
+
+url: "https://sattwik-sahu.github.io"
+baseurl: "/contact_graspnet_ros"
+repository: sattwik-sahu/contact_graspnet_ros
+
+theme: jekyll-theme-material-docs
+lang: en
+permalink: pretty
+markdown: kramdown
+highlighter: rouge
+
+plugins:
+  - jekyll-github-metadata
+  - jekyll-seo-tag
+
+sass:
+  quiet_deps: true
+  style: compressed
+
+main_nav:
+  - title: Getting Started
+    url: /getting-started/
+  - title: ROS Interfaces
+    url: /ros-interfaces/
+  - title: Contributing
+    url: /contributing/
+
+content_table:
+  - title: Guide
+    links:
+      - title: Overview
+        url: /
+      - title: Getting Started
+        url: /getting-started/
+      - title: Configuration
+        url: /configuration/
+      - title: Deployment
+        url: /deployment/
+      - title: Troubleshooting
+        url: /troubleshooting/
+  - title: Reference
+    links:
+      - title: Architecture
+        url: /architecture/
+      - title: ROS Interfaces
+        url: /ros-interfaces/
+      - title: Inference Contract
+        url: /inference-contract/
+      - title: Design / PRD
+        url: /design/
+  - title: Project
+    links:
+      - title: Contributing
+        url: /contributing/
+      - title: License
+        url: /license/
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - .bundle
+  - _site

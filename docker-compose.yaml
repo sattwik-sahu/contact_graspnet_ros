@@ -1,0 +1,30 @@
+include:
+  - path: docker/compose.contact_graspnet.yaml
+    project_directory: .
+
+services:
+  contact_graspnet:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        PIXI_ENV: jazzy
+    depends_on:
+      zenoh-router:
+        condition: service_healthy
+
+  zenoh-router:
+    image: ${GRASPNET_IMAGE:-contact_graspnet_ros:jazzy}
+    container_name: contact_graspnet_zenoh
+    network_mode: host
+    environment:
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+    command: ["ros2", "run", "rmw_zenoh_cpp", "rmw_zenohd"]
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f rmw_zenohd"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    restart: unless-stopped
+
+

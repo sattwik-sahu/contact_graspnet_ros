@@ -1,0 +1,32 @@
+services:
+  contact_graspnet:
+    image: ${GRASPNET_IMAGE:-contact_graspnet_ros:jazzy}
+    container_name: contact_graspnet
+    network_mode: host
+    environment:
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_zenoh_cpp}
+      CONTACT_GRASPNET_ROOT: /opt/contact_graspnet_ros
+      GRASPNET_CONFIG_DIR: /opt/contact_graspnet_ros/config
+      GRASPNET_CHECKPOINT_DIR: /opt/contact_graspnet_ros/checkpoints
+    volumes:
+      - ${GRASPNET_CONFIG_DIR:-./config}:/opt/contact_graspnet_ros/config:ro
+      - ${GRASPNET_CHECKPOINT_DIR:-./third_party/contact_graspnet_pytorch/checkpoints/contact_graspnet/checkpoints}:/opt/contact_graspnet_ros/checkpoints:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          bash -c '. /shell-hook && . /opt/contact_graspnet_ros/install/$${ROS_DISTRO}/setup.bash
+          && ros2 node list | grep -q contact_graspnet'
+      interval: 10s
+      timeout: 5s
+      start_period: 180s
+      retries: 6
+    restart: unless-stopped

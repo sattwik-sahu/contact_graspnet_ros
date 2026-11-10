@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Pixi / Colcon / ROS
+.pixi/
+.colcon/
+install/
+log/
+build/
+*.bag
+*.db3
+*.mcap
+results/
+
+# Test / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Jekyll / GitHub Pages
+docs/_site/
+docs/.jekyll-cache/
+docs/.jekyll-metadata
+docs/.bundle/
+docs/vendor/
+.bundle/
+vendor/bundle/
+*.gem
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local configuration / secrets
+.env
+.env.*
+docker-compose.override.yaml
+
+# Local data and weights
+test_data/
+checkpoints/
+*.npz
+*.npy
+
+# Logs
+*.log
