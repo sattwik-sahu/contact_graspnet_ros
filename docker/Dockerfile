@@ -7,6 +7,9 @@ ARG PIXI_ENV=jazzy
 FROM ${PIXI_IMAGE} AS build
 
 ARG PIXI_ENV
+# The build machine has no GPU; mock the target CUDA virtual package so the
+# locked GPU environment can be installed for the runtime image.
+ENV CONDA_OVERRIDE_CUDA=12.9
 WORKDIR /opt/contact_graspnet_ros
 
 COPY pixi.toml pixi.lock ./
