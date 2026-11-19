@@ -9,8 +9,8 @@ from pathlib import Path
 
 import numpy as np
 
-from .config import load_model_config, resolve_model_defaults
-from .geometry import (
+from contact_graspnet_ros.core.config import load_model_config, resolve_model_defaults
+from contact_graspnet_ros.core.geometry import (
     extract_3d_cam_boxes,
     extract_point_clouds,
     filter_segment,
@@ -18,8 +18,13 @@ from .geometry import (
     regularize_pc_point_count,
     select_grasps,
 )
-from .model import build_model, load_checkpoint, resolve_device, set_seed
-from .types import (
+from contact_graspnet_ros.core.model import (
+    build_model,
+    load_checkpoint,
+    resolve_device,
+    set_seed,
+)
+from contact_graspnet_ros.core.types import (
     CameraIntrinsics,
     FloatArray,
     GraspProposal,
