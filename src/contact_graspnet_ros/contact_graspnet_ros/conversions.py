@@ -8,6 +8,7 @@ from cv_bridge import CvBridge
 from geometry_msgs.msg import Point, Pose, Quaternion
 from sensor_msgs.msg import CameraInfo, Image
 
+from contact_graspnet_ros.core.transforms import transform_from_xyz_quaternion
 from contact_graspnet_ros.core.types import CameraIntrinsics, FloatArray, IntArray
 
 _BRIDGE = CvBridge()
@@ -101,6 +102,17 @@ def pose_from_matrix(matrix: npt.ArrayLike) -> Pose:
             z=float(quaternion[2]),
             w=float(quaternion[3]),
         ),
+    )
+
+
+def matrix_from_transform_stamped(transform) -> npt.NDArray[np.float64]:
+    """Convert a ``geometry_msgs/TransformStamped`` to a ``4x4`` matrix."""
+
+    translation = transform.transform.translation
+    quaternion = transform.transform.rotation
+    return transform_from_xyz_quaternion(
+        (translation.x, translation.y, translation.z),
+        (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
     )
 
 

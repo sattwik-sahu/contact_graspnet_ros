@@ -18,7 +18,7 @@ from typing import Any
 
 import numpy as np
 
-from .config import ModelConfigError
+from contact_graspnet_ros.core.config import ModelConfigError
 
 _TORCH_IMPORT_ERROR: Exception | None = None
 _TORCH = None

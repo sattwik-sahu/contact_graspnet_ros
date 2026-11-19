@@ -13,7 +13,7 @@ from collections.abc import Iterable, Mapping
 
 import numpy as np
 
-from .types import FloatArray, IntArray
+from contact_graspnet_ros.core.types import FloatArray, IntArray
 
 _EPS = 1e-12
 
