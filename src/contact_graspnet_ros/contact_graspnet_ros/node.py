@@ -5,12 +5,16 @@ from __future__ import annotations
 import contextlib
 import threading
 
+import numpy as np
 import rclpy
 from geometry_msgs.msg import Point
+from rclpy.duration import Duration
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
+from rclpy.time import Time
 from sensor_msgs.msg import CameraInfo, Image
 from std_msgs.msg import Header
+from tf2_ros import Buffer, TransformException, TransformListener
 
 from contact_graspnet_msgs.msg import GraspProposal as GraspProposalMsg
 from contact_graspnet_msgs.msg import GraspProposalArray
@@ -20,9 +24,14 @@ from contact_graspnet_ros.conversions import (
     camera_info_to_intrinsics,
     image_to_depth,
     image_to_mask,
+    matrix_from_transform_stamped,
     pose_from_matrix,
 )
 from contact_graspnet_ros.core.engine import ContactGraspNetEngine
+from contact_graspnet_ros.core.transforms import (
+    apply_transform,
+    transform_from_offset_rpy,
+)
 from contact_graspnet_ros.core.types import GraspResult, InferenceOptions
 
 
@@ -46,6 +55,20 @@ class ContactGraspNetNode(Node):
         self.get_logger().info(
             f"Engine ready on {self._engine.device_name}; "
             f"raw_num_points={self._engine.defaults.raw_num_points}"
+        )
+
+        self._tf_buffer = Buffer()
+        # Give the listener its own node and thread: a service callback blocks
+        # while waiting for a transform, and sharing this node's executor would
+        # either deadlock or double-spin the node's subscriptions.
+        self._tf_listener = TransformListener(
+            self._tf_buffer, None, spin_thread=True
+        )
+
+        # Static transform from the network's gripper frame to the downstream
+        # tool/EE frame. Identity by default (native gripper-base output).
+        self._grasp_to_tool = transform_from_offset_rpy(
+            self._config.tcp_offset, self._config.tcp_rpy
         )
 
         self._inference_lock = threading.Lock()
@@ -82,18 +105,27 @@ class ContactGraspNetNode(Node):
                     request.mask, binary=self._config.mask_mode == "binary"
                 )
 
-            frame_id = self._resolve_frame_id(request.depth, request.camera_info)
+            camera_frame = self._resolve_frame_id(
+                request.depth, request.camera_info
+            )
+            output_frame, target_from_camera = self._resolve_output_frame(
+                request, camera_frame
+            )
             options = self._request_options(request)
             result = self._engine.infer(depth, intrinsics, mask, options)
 
             response.grasps = self._to_message(
-                result, frame_id, request.depth.header.stamp
+                result,
+                output_frame,
+                request.depth.header.stamp,
+                target_from_camera,
             )
             response.success = True
             response.message = f"{len(result)} grasps"
             self.get_logger().info(
                 f"{len(result)} grasps in {result.inference_time_s:.3f}s "
-                f"(frame={frame_id}, points={result.num_input_points})"
+                f"(camera_frame={camera_frame}, output_frame={output_frame}, "
+                f"points={result.num_input_points})"
             )
             for warning in result.warnings:
                 self.get_logger().warning(warning)
@@ -133,23 +165,69 @@ class ContactGraspNetNode(Node):
             raise ValueError("depth/camera_info header.frame_id is empty")
         return frame_id
 
+    def _resolve_output_frame(
+        self, request: GenerateGrasps.Request, camera_frame: str
+    ) -> tuple[str, np.ndarray | None]:
+        """Return the requested output frame and ``T_output_camera``.
+
+        The request field wins, then the node parameter; empty means "keep the
+        camera frame". ``None`` signals an identity transform.
+        """
+
+        output_frame = (
+            request.target_frame.strip()
+            or self._config.target_frame.strip()
+            or camera_frame
+        )
+        if output_frame == camera_frame:
+            return camera_frame, None
+
+        stamp = request.depth.header.stamp
+        lookup_time = (
+            Time() if stamp.sec == 0 and stamp.nanosec == 0 else Time.from_msg(stamp)
+        )
+        try:
+            transform = self._tf_buffer.lookup_transform(
+                output_frame,
+                camera_frame,
+                lookup_time,
+                timeout=Duration(seconds=self._config.tf_timeout_s),
+            )
+        except TransformException as exc:
+            raise RuntimeError(
+                f"cannot transform grasps from {camera_frame!r} to "
+                f"{output_frame!r}: {exc}"
+            ) from exc
+
+        return output_frame, matrix_from_transform_stamped(transform)
+
     def _to_message(
-        self, result: GraspResult, frame_id: str, stamp
+        self,
+        result: GraspResult,
+        frame_id: str,
+        stamp,
+        target_from_camera: np.ndarray | None,
     ) -> GraspProposalArray:
         message = GraspProposalArray()
         message.header = Header(stamp=stamp, frame_id=frame_id)
         message.num_input_points = int(result.num_input_points)
         message.inference_time_s = float(result.inference_time_s)
         for proposal in result.proposals:
+            pose = proposal.pose @ self._grasp_to_tool
+            contact_point = proposal.contact_point
+            if target_from_camera is not None:
+                pose = target_from_camera @ pose
+                contact_point = apply_transform(target_from_camera, contact_point)
+
             message.grasps.append(
                 GraspProposalMsg(
-                    pose=pose_from_matrix(proposal.pose),
+                    pose=pose_from_matrix(pose),
                     score=float(proposal.score),
                     width=float(proposal.width),
                     contact_point=Point(
-                        x=float(proposal.contact_point[0]),
-                        y=float(proposal.contact_point[1]),
-                        z=float(proposal.contact_point[2]),
+                        x=float(contact_point[0]),
+                        y=float(contact_point[1]),
+                        z=float(contact_point[2]),
                     ),
                     segment_id=int(proposal.segment_id),
                 )
@@ -159,6 +237,10 @@ class ContactGraspNetNode(Node):
     def destroy_node(self) -> bool:
         with contextlib.suppress(Exception):
             self._engine.close()
+        with contextlib.suppress(Exception):
+            self._tf_listener.executor.shutdown()
+        with contextlib.suppress(Exception):
+            self._tf_listener.node.destroy_node()
         return super().destroy_node()
 
 

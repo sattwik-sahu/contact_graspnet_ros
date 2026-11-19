@@ -35,6 +35,10 @@ class NodeConfig:
     service_timeout_s: float
     mask_mode: str
     depth_scale: float
+    target_frame: str
+    tcp_offset: tuple[float, float, float]
+    tcp_rpy: tuple[float, float, float]
+    tf_timeout_s: float
 
     @property
     def checkpoint_path(self) -> Path:
@@ -91,6 +95,12 @@ class NodeConfig:
         )
         mask_mode = str(node.declare_parameter("mask_mode", "labels").value)
         depth_scale = float(node.declare_parameter("depth_scale", 0.001).value)
+        target_frame = str(node.declare_parameter("target_frame", "").value)
+        tcp_offset_value = node.declare_parameter(
+            "tcp_offset", [0.0, 0.0, 0.0]
+        ).value
+        tcp_rpy_value = node.declare_parameter("tcp_rpy", [0.0, 0.0, 0.0]).value
+        tf_timeout_s = float(node.declare_parameter("tf_timeout_s", 0.2).value)
 
         try:
             z_range = (float(z_range_value[0]), float(z_range_value[1]))
@@ -98,6 +108,9 @@ class NodeConfig:
             raise ConfigError(
                 f"z_range must be a two-element array, got {z_range_value!r}"
             ) from exc
+
+        tcp_offset = _vector3(tcp_offset_value, "tcp_offset")
+        tcp_rpy = _vector3(tcp_rpy_value, "tcp_rpy")
 
         config = cls(
             model_config_path=_resolve_model_config(model_config),
@@ -118,6 +131,10 @@ class NodeConfig:
             service_timeout_s=service_timeout_s,
             mask_mode=mask_mode,
             depth_scale=depth_scale,
+            target_frame=target_frame,
+            tcp_offset=tcp_offset,
+            tcp_rpy=tcp_rpy,
+            tf_timeout_s=tf_timeout_s,
         )
         config.validate()
         return config
@@ -149,6 +166,10 @@ class NodeConfig:
             raise ConfigError(
                 f"service_timeout_s must be positive, got {self.service_timeout_s}"
             )
+        if self.tf_timeout_s <= 0.0:
+            raise ConfigError(
+                f"tf_timeout_s must be positive, got {self.tf_timeout_s}"
+            )
         if self.device not in ("cuda", "cpu", "auto"):
             raise ConfigError(f"device must be cuda, cpu or auto, got {self.device!r}")
         if self.mask_mode not in ("labels", "binary"):
@@ -159,6 +180,17 @@ class NodeConfig:
             raise ConfigError(f"model_config not found: {self.model_config_path}")
         if not self.checkpoint_path.is_file():
             raise ConfigError(f"checkpoint not found: {self.checkpoint_path}")
+
+
+def _vector3(value, name: str) -> tuple[float, float, float]:
+    try:
+        if len(value) != 3:
+            raise ValueError
+        return (float(value[0]), float(value[1]), float(value[2]))
+    except Exception as exc:
+        raise ConfigError(
+            f"{name} must be a three-element array, got {value!r}"
+        ) from exc
 
 
 def _resolve_model_config(value: str) -> Path:
