@@ -50,6 +50,25 @@ The pose is the gripper base frame in the camera optical frame:
 
 `width` is the commanded finger opening, clamped to the model's gripper width.
 
+### Service output transform
+
+The engine above always works in the camera optical frame. The ROS service then
+optionally applies two transforms before publishing:
+
+```text
+T_output_tool = T_target_camera @ T_camera_grasp @ T_grasp_tool
+```
+
+- `T_target_camera` comes from TF and is selected by `target_frame`
+  (request field, then node parameter).
+- `T_grasp_tool` is built from `tcp_offset` (metres) and `tcp_rpy` (radians) and
+  maps the network's gripper frame to the downstream tool/EE frame.
+
+The response header names the resolved output frame, and `contact_point` is
+transformed with the same `T_target_camera`. With both defaults the output is
+identical to the engine's native camera-frame gripper-base pose. See
+[Grasp Frames](grasp-frames.md).
+
 ## Coordinate conversion
 
 The network is trained in an internal frame with x left, y up, z forward. The

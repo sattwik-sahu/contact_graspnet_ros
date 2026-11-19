@@ -48,13 +48,34 @@ Key parameters in `config/graspnet.yaml`:
 | `service_timeout_s` | `5.0` | concurrent-call wait before `busy` |
 | `mask_mode` | `labels` | `labels` or `binary` |
 | `depth_scale` | `0.001` | metres per unit for `16UC1` depth |
+| `target_frame` | `""` | output TF frame; empty keeps the depth frame |
+| `tcp_offset` | `[0, 0, 0]` | tool translation, metres, network gripper frame |
+| `tcp_rpy` | `[0, 0, 0]` | tool rotation, radians, fixed-axis roll/pitch/yaw |
+| `tf_timeout_s` | `0.2` | TF lookup timeout |
 
 The `GenerateGrasps` request can override `z_range`, `local_regions`,
-`filter_grasps`, `skip_border_objects`, `segmap_id` and `forward_passes` for a
-single call.
+`filter_grasps`, `skip_border_objects`, `segmap_id`, `forward_passes` and
+`target_frame` for a single call.
 
 Startup-only parameters such as `checkpoint_dir`, `model_config` and `device`
 should be changed in the YAML and the node restarted.
+
+## Frame and tool settings
+
+`target_frame` selects the frame the poses are expressed in. `tcp_offset` and
+`tcp_rpy` map the network's gripper frame to your downstream tool/EE frame.
+Both default to values that preserve the native Contact-GraspNet output.
+
+Typical Franka Panda settings, when planning for `panda_hand`:
+
+```yaml
+target_frame: "base_link"
+tcp_offset: [0.0, 0.0, 0.0]
+tcp_rpy: [0.0, 0.0, 1.5708]
+```
+
+See [Grasp Frames](grasp-frames.md) for the derivation and a calibration
+procedure for other grippers.
 
 ## Calling without a mask
 

@@ -104,16 +104,20 @@ docker compose up
 ```
 
 The root `docker-compose.yaml` includes
-`docker/compose.contact_graspnet.yaml` and starts a Zenoh router. The checkpoint
-is mounted read-only; it is not baked into the image.
+`docker/compose.contact_graspnet.yaml` and starts a Zenoh router. Both services
+use host networking and host IPC. The checkpoint is mounted read-only; it is
+not baked into the image.
 
-See [Deployment](deployment.md) for Compose integration
-and configuration mounts.
+See [Docker and Docker Compose](docker.md) for the full guide (mounts, GPU,
+environment variables, Compose integration), and
+[Deployment](deployment.md) for the short reference.
 
 ## Next steps
 
 - Tune parameters in [Configuration](configuration.md).
 - Learn the pose and frame conventions in
   [Inference Contract](inference-contract.md).
+- Return poses in your planning frame and map them to your gripper in
+  [Grasp Frames and Downstream Planning](grasp-frames.md).
 - Read [Contributing](contributing.md) before opening a
   pull request.

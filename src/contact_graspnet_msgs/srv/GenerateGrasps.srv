@@ -7,6 +7,9 @@ bool filter_grasps
 bool skip_border_objects
 float64[2] z_range
 uint8 forward_passes
+# Frame the returned poses/contact points should be expressed in. Empty means
+# the node's target_frame parameter, and if that is empty too, the depth frame.
+string target_frame
 ---
 bool success
 string message

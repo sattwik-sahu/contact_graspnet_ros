@@ -26,6 +26,7 @@ bool filter_grasps
 bool skip_border_objects
 float64[2] z_range
 uint8 forward_passes
+string target_frame
 ```
 
 - `depth`: `32FC1` in metres or `16UC1` in millimetres (`depth_scale`).
@@ -35,6 +36,8 @@ uint8 forward_passes
 - `local_regions` / `filter_grasps`: require a mask.
 - `z_range`: crop in camera z, metres.
 - `forward_passes`: model batch passes.
+- `target_frame`: TF frame for the returned poses and contact points. Empty
+  falls back to the node's `target_frame` parameter, then to the depth frame.
 
 ### Response
 
@@ -63,9 +66,12 @@ geometry_msgs/Point contact_point
 int32 segment_id
 ```
 
-The response header carries the input camera frame and timestamp. Poses are
-gripper-base poses in the camera optical frame; see
-[Inference Contract](inference-contract.md).
+The response header carries the resolved output frame and the input timestamp.
+Poses and contact points are expressed in that frame, with the configured
+`tcp_offset`/`tcp_rpy` tool transform applied. With the defaults
+(`target_frame: ""`, identity tool transform) this is the native gripper-base
+pose in the camera optical frame. See [Inference Contract](inference-contract.md)
+and [Grasp Frames](grasp-frames.md) for the full contract.
 
 ## Calling the service
 

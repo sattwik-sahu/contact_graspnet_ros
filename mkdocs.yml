@@ -46,6 +46,8 @@ nav:
   - Guide:
       - Getting Started: getting-started.md
       - Configuration: configuration.md
+      - Grasp Frames & Downstream Planning: grasp-frames.md
+      - Docker & Docker Compose: docker.md
       - Deployment: deployment.md
       - Troubleshooting: troubleshooting.md
   - Reference:

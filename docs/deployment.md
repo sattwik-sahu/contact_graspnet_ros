@@ -26,6 +26,10 @@ pixi run -e jazzy python scripts/call_grasp_service.py \
 
 ## Docker
 
+For a full guide, including mounts, environment variables, GPU setup, host
+networking/IPC and Compose integration, see
+[Docker and Docker Compose](docker.md).
+
 ```bash
 git submodule update --init --recursive
 docker compose build
@@ -57,12 +61,13 @@ Compose requests one NVIDIA GPU. Verify the host has the NVIDIA Container
 Toolkit installed. For CPU-only, remove the `deploy` block and set
 `device: cpu` in `config/graspnet.yaml`.
 
-### Networking
+### Networking and IPC
 
-The services use `network_mode: host` for reliable DDS/Zenoh discovery on
-Linux. If the parent Compose project already runs a Zenoh router, remove the
-`zenoh-router` service. If the parent uses Fast DDS, set
-`RMW_IMPLEMENTATION=rmw_fastrtps_cpp`.
+Both services use `network_mode: host` for reliable DDS/Zenoh discovery on
+Linux, and `ipc: host` so ROS shared-memory transport and PyTorch do not hit the
+container's default 64 MB `/dev/shm` limit. If the parent Compose project
+already runs a Zenoh router, remove the `zenoh-router` service. If the parent
+uses Fast DDS, set `RMW_IMPLEMENTATION=rmw_fastrtps_cpp`.
 
 ### Include-able file
 

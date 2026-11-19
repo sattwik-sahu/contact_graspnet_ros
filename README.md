@@ -61,7 +61,9 @@ Configuration is in [`config/`](config/), Docker assets in
 
 - [Getting Started](https://sattwik-sahu.github.io/contact_graspnet_ros/getting-started/)
 - [Configuration](https://sattwik-sahu.github.io/contact_graspnet_ros/configuration/)
+- [Grasp Frames & Downstream Planning](https://sattwik-sahu.github.io/contact_graspnet_ros/grasp-frames/)
 - [ROS Interfaces](https://sattwik-sahu.github.io/contact_graspnet_ros/ros-interfaces/)
+- [Docker & Docker Compose](https://sattwik-sahu.github.io/contact_graspnet_ros/docker/)
 - [Deployment](https://sattwik-sahu.github.io/contact_graspnet_ros/deployment/)
 - [Contributing](https://sattwik-sahu.github.io/contact_graspnet_ros/contributing/)
 

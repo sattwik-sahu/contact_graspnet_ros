@@ -507,11 +507,14 @@ Topic names are parameters/remappable. A namespace such as `/graspnet` is recomm
 | `publish_contact_points` | bool | `true` | |
 | `input_qos` | string | `sensor_data` | or `default` |
 | `output_qos` | string | `reliable` | or `sensor_data` |
-| `tf_timeout_s` | double | `0.1` | |
+| `tf_timeout_s` | double | `0.2` | TF lookup timeout |
 | `service_timeout_s` | double | `5.0` | |
 | `diagnostics_rate_hz` | double | `1.0` | |
 | `mask_mode` | string | `labels` | or `binary` |
 | `depth_scale` | double | `0.001` | for 16UC1 |
+| `target_frame` | string | `""` | output frame; empty keeps camera frame |
+| `tcp_offset` | double[3] | `[0, 0, 0]` | tool translation, metres |
+| `tcp_rpy` | double[3] | `[0, 0, 0]` | tool rotation, radians |
 
 Validation at startup:
 
@@ -554,11 +557,14 @@ Validation at startup:
     publish_contact_points: true
     input_qos: sensor_data
     output_qos: reliable
-    tf_timeout_s: 0.1
+    tf_timeout_s: 0.2
     service_timeout_s: 5.0
     diagnostics_rate_hz: 1.0
     mask_mode: labels
     depth_scale: 0.001
+    target_frame: ""
+    tcp_offset: [0.0, 0.0, 0.0]
+    tcp_rpy: [0.0, 0.0, 0.0]
 ```
 
 `config/model.yaml` — copy of `third_party/contact_graspnet_pytorch/checkpoints/contact_graspnet/config.yaml` with a header comment:

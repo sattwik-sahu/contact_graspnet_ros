@@ -17,6 +17,7 @@ services:
     image: ${GRASPNET_IMAGE:-contact_graspnet_ros:jazzy}
     container_name: contact_graspnet_zenoh
     network_mode: host
+    ipc: host
     environment:
       ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
     command: ["ros2", "run", "rmw_zenoh_cpp", "rmw_zenohd"]

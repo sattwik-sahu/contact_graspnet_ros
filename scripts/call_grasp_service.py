@@ -32,6 +32,14 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--filter-grasps", action="store_true", default=True)
     parser.add_argument("--skip-border-objects", action="store_true", default=False)
     parser.add_argument("--forward-passes", type=int, default=1)
+    parser.add_argument(
+        "--target-frame",
+        default="",
+        help=(
+            "TF frame for returned poses/contacts (e.g. base_link). "
+            "Empty keeps the depth frame."
+        ),
+    )
     parser.add_argument("--timeout", type=float, default=60.0)
     return parser.parse_args()
 
@@ -118,6 +126,7 @@ def main() -> None:
     request.skip_border_objects = args.skip_border_objects
     request.z_range = [args.z_min, args.z_max]
     request.forward_passes = args.forward_passes
+    request.target_frame = args.target_frame
 
     future = client.call_async(request)
     rclpy.spin_until_future_complete(node, future, timeout_sec=args.timeout)
@@ -138,7 +147,13 @@ def main() -> None:
             f"score={top.score:.4f} width={top.width:.4f} "
             f"segment={top.segment_id} "
             f"position=({top.pose.position.x:.4f}, "
-            f"{top.pose.position.y:.4f}, {top.pose.position.z:.4f})"
+            f"{top.pose.position.y:.4f}, {top.pose.position.z:.4f}) "
+            f"orientation=({top.pose.orientation.x:.4f}, "
+            f"{top.pose.orientation.y:.4f}, "
+            f"{top.pose.orientation.z:.4f}, "
+            f"{top.pose.orientation.w:.4f}) "
+            f"contact=({top.contact_point.x:.4f}, "
+            f"{top.contact_point.y:.4f}, {top.contact_point.z:.4f})"
         )
 
     node.destroy_node()

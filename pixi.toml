@@ -2,12 +2,13 @@
 name = "contact_graspnet_ros"
 version = "0.1.0"
 description = "ROS 2 wrapper for Contact-GraspNet (PyTorch port)"
-authors = ["Contact-GraspNet ROS maintainers"]
+authors = [ "Sattwik Sahu <sahusattwik@gmail.com>" ]
 channels = ["https://prefix.dev/conda-forge"]
-platforms = ["linux-64"]
-
-[system-requirements]
-cuda = "12.9"
+platforms = [
+  { name = "linux-64-desktop", platform = "linux-64", cuda = "12.9" },
+  { name = "jetpack-6", platform = "linux-aarch64", cuda = "12.6", glibc = "2.35", linux = "5.15" },
+  { name = "jetpack-7", platform = "linux-aarch64", cuda = "13.2", glibc = "2.39", linux = "6.8" },
+]
 
 [feature.common.dependencies]
 numpy = "*"

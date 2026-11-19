@@ -21,3 +21,14 @@
     service_timeout_s: 5.0
     mask_mode: labels
     depth_scale: 0.001
+
+    # Output frame. Empty keeps the depth/camera_info frame. A request may
+    # override this per call via GenerateGrasps.target_frame.
+    target_frame: ""
+
+    # Static transform from the network's gripper frame (+X closing, +Z
+    # approach, origin at the flange) to your downstream tool/EE frame.
+    # Identity default keeps the native Contact-GraspNet convention.
+    tcp_offset: [0.0, 0.0, 0.0]   # metres, in the network gripper frame
+    tcp_rpy: [0.0, 0.0, 0.0]      # radians, fixed-axis roll/pitch/yaw
+    tf_timeout_s: 0.2
