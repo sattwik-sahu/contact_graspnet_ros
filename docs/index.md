@@ -41,7 +41,7 @@ project.
 |---|---|---|
 | [Getting Started](getting-started.md) | [Architecture](architecture.md) | [Contributing](contributing.md) |
 | [Configuration](configuration.md) | [ROS Interfaces](ros-interfaces.md) | [License](license.md) |
-| [Grasp Frames](grasp-frames.md) | [Inference Contract](inference-contract.md) | [Design / PRD](design.md) |
-| [Docker & Compose](docker.md) | [Deployment](deployment.md) | |
+| [Grasp Frames](grasp-frames.md) | [Inference Contract](inference-contract.md) | |
+| [Docker & Compose](docker.md) | [Deployment](deployment.md) | [Agent Guide](agent-guide.md) |
 
 Source: [sattwik-sahu/contact_graspnet_ros](https://github.com/sattwik-sahu/contact_graspnet_ros)

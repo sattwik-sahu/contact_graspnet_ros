@@ -1,6 +1,7 @@
 # Contact-GraspNet ROS 2
 
 [![Documentation](https://img.shields.io/badge/docs-online-6750A4?style=flat-square)](https://sattwik-sahu.github.io/contact_graspnet_ros/)
+[![Agent Guide](https://img.shields.io/badge/agent%20guide-online-6750A4?style=flat-square)](https://sattwik-sahu.github.io/contact_graspnet_ros/agent-guide/)
 [![Docs build](https://github.com/sattwik-sahu/contact_graspnet_ros/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/sattwik-sahu/contact_graspnet_ros/actions/workflows/docs.yml)
 [![Docker build](https://github.com/sattwik-sahu/contact_graspnet_ros/actions/workflows/docker.yml/badge.svg?branch=main)](https://github.com/sattwik-sahu/contact_graspnet_ros/actions/workflows/docker.yml)
 [![ROS 2 Jazzy](https://img.shields.io/badge/ROS%202-Jazzy-22314E?style=flat-square)](https://docs.ros.org/en/jazzy/)
@@ -68,6 +69,15 @@ The site is built with [Zensical](https://zensical.org/) from `zensical.toml`.
 - [Docker & Docker Compose](https://sattwik-sahu.github.io/contact_graspnet_ros/docker/)
 - [Deployment](https://sattwik-sahu.github.io/contact_graspnet_ros/deployment/)
 - [Contributing](https://sattwik-sahu.github.io/contact_graspnet_ros/contributing/)
+- [Agent Guide](https://sattwik-sahu.github.io/contact_graspnet_ros/agent-guide/)
+
+## For AI agents
+
+Read [`AGENTS.md`](AGENTS.md) at the repository root before making changes. It
+contains the repo map, non-negotiable rules, key APIs, commands and gotchas.
+The same guidance is published as the
+[Agent Guide](https://sattwik-sahu.github.io/contact_graspnet_ros/agent-guide/)
+for humans.
 
 ## License
 

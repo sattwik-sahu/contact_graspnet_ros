@@ -25,10 +25,10 @@ nav = [
     { "Architecture" = "architecture.md" },
     { "ROS Interfaces" = "ros-interfaces.md" },
     { "Inference Contract" = "inference-contract.md" },
-    { "Design / PRD" = "design.md" },
   ] },
   { "Project" = [
     { "Contributing" = "contributing.md" },
+    { "Agent Guide" = "agent-guide.md" },
     { "License" = "license.md" },
   ] },
 ]
