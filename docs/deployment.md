@@ -89,23 +89,32 @@ or use the `zenoh-router` service in `docker-compose.yaml`.
 
 ## GitHub Pages documentation
 
-The documentation site is built from `docs/` with the
-[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme.
+The documentation site is built from `docs/` with
+[Zensical](https://zensical.org/), configured in `zensical.toml`. The `classic`
+theme variant preserves the appearance of the former Material for MkDocs site.
 
 - Site: https://sattwik-sahu.github.io/contact_graspnet_ros/
 - Source: `docs/`
+- Configuration: `zensical.toml`
 - Deployment workflow: `.github/workflows/docs.yml`
 - GitHub Pages source must be set to **GitHub Actions** in the repository
   settings.
 
-The workflow rebuilds and deploys the site when `docs/**` changes on `main`.
-It can also be run manually with `workflow_dispatch`.
+The workflow rebuilds and deploys the site when `docs/**`, `zensical.toml` or
+the workflow itself changes on `main`. It can also be run manually with
+`workflow_dispatch`.
 
 Local preview:
 
 ```bash
-pip install -r docs/requirements.txt
-mkdocs serve
+pip install -r docs-requirements.txt
+zensical serve
+```
+
+Strict local build check:
+
+```bash
+zensical build --clean --strict
 ```
 
 ## Docker CI

@@ -33,7 +33,7 @@ htmlcov/
 .tox/
 .nox/
 
-# MkDocs / GitHub Pages
+# Zensical / GitHub Pages
 site/
 .cache/
 

@@ -62,20 +62,21 @@ GPU tests may be skipped when CUDA is unavailable; mark them clearly.
 
 ## Documentation
 
-The documentation is a MkDocs site in `docs/` using Material for MkDocs.
+The documentation is a [Zensical](https://zensical.org/) site in `docs/`,
+configured by `zensical.toml`.
 
 ```bash
-pip install -r docs/requirements.txt
-mkdocs serve
+pip install -r docs-requirements.txt
+zensical serve
 ```
 
 Before committing docs changes:
 
 ```bash
-mkdocs build --strict
+zensical build --clean --strict
 ```
 
-Add new pages under `docs/`, add them to the `nav` in `mkdocs.yml`, and use
+Add new pages under `docs/`, add them to the `nav` in `zensical.toml`, and use
 standard relative Markdown links:
 
 ```markdown
