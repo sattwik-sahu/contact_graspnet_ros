@@ -15,6 +15,7 @@ nav = [
   { "Home" = "index.md" },
   { "Guide" = [
     { "Getting Started" = "getting-started.md" },
+    { "Example Output" = "example-output.md" },
     { "Configuration" = "configuration.md" },
     { "Grasp Frames & Downstream Planning" = "grasp-frames.md" },
     { "Docker & Docker Compose" = "docker.md" },

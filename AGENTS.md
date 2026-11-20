@@ -53,8 +53,9 @@ motion. MoveIt (or any other planner) lives in a downstream package.
 ```text
 AGENTS.md                         this file (agent entry point)
 zensical.toml                     documentation site config (Zensical)
-docs-requirements.txt             docs build dependency (zensical)
-docs/                             documentation source + agent-guide.md
+docs-requirements.txt             docs/banner build deps (zensical, matplotlib)
+docs/                             documentation source + agent-guide.md,
+                                  example-output.md and assets/banner.png
 config/
   graspnet.yaml                   ROS node parameters (runtime)
   model.yaml                      model architecture + defaults (authoritative)
@@ -80,6 +81,8 @@ src/contact_graspnet_ros/
 scripts/
   run_inference.py                ROS-free engine smoke script
   call_grasp_service.py           ROS service client example
+  demo_from_mesh.py               download a mesh, sample points, run inference
+  render_banner.py                render 3-D grasp plot + README/docs banner
   activate.sh                     Pixi activation hook (env vars + install setup)
 docker/                           Dockerfile, entrypoint, include-able compose file
 docker-compose.yaml               root compose project (+ Zenoh router)

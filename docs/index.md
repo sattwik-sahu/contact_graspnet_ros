@@ -1,5 +1,7 @@
 # Contact-GraspNet ROS 2
 
+![Contact-GraspNet ROS 2 banner](assets/banner.png)
+
 ## What it does
 
 This repository wraps the PyTorch implementation of
@@ -40,6 +42,7 @@ project.
 | Start here | Reference | Project |
 |---|---|---|
 | [Getting Started](getting-started.md) | [Architecture](architecture.md) | [Contributing](contributing.md) |
+| [Example Output](example-output.md) | | |
 | [Configuration](configuration.md) | [ROS Interfaces](ros-interfaces.md) | [License](license.md) |
 | [Grasp Frames](grasp-frames.md) | [Inference Contract](inference-contract.md) | |
 | [Docker & Compose](docker.md) | [Deployment](deployment.md) | [Agent Guide](agent-guide.md) |

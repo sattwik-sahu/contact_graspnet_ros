@@ -104,6 +104,7 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 ## Further reading
 
 - [Getting Started](getting-started.md)
+- [Example Output](example-output.md)
 - [Architecture](architecture.md)
 - [Inference Contract](inference-contract.md)
 - [ROS Interfaces](ros-interfaces.md)

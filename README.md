@@ -7,6 +7,8 @@
 [![ROS 2 Jazzy](https://img.shields.io/badge/ROS%202-Jazzy-22314E?style=flat-square)](https://docs.ros.org/en/jazzy/)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-3776AB?style=flat-square)](https://www.python.org/)
 
+![Contact-GraspNet ROS 2 banner](docs/assets/banner.png)
+
 A modular, Dockerized ROS 2 wrapper for
 [Contact-GraspNet](https://github.com/elchun/contact_graspnet_pytorch).
 
@@ -63,6 +65,7 @@ Configuration is in [`config/`](config/), Docker assets in
 The site is built with [Zensical](https://zensical.org/) from `zensical.toml`.
 
 - [Getting Started](https://sattwik-sahu.github.io/contact_graspnet_ros/getting-started/)
+- [Example Output](https://sattwik-sahu.github.io/contact_graspnet_ros/example-output/)
 - [Configuration](https://sattwik-sahu.github.io/contact_graspnet_ros/configuration/)
 - [Grasp Frames & Downstream Planning](https://sattwik-sahu.github.io/contact_graspnet_ros/grasp-frames/)
 - [ROS Interfaces](https://sattwik-sahu.github.io/contact_graspnet_ros/ros-interfaces/)
