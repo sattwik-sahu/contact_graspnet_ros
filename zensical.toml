@@ -1,6 +1,6 @@
 # Zensical configuration for the Contact-GraspNet ROS 2 documentation.
-# Migrated from mkdocs.yml. The `classic` variant preserves the appearance of
-# the previous Material for MkDocs theme.
+# Migrated from mkdocs.yml. The `modern` variant is Zensical's default theme;
+# use `classic` to restore the former Material for MkDocs appearance.
 
 [project]
 site_name = "Contact-GraspNet ROS 2"
@@ -34,7 +34,7 @@ nav = [
 ]
 
 [project.theme]
-variant = "classic"
+variant = "modern"
 language = "en"
 features = [
   "navigation.tabs",

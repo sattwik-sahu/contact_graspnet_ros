@@ -90,8 +90,9 @@ or use the `zenoh-router` service in `docker-compose.yaml`.
 ## GitHub Pages documentation
 
 The documentation site is built from `docs/` with
-[Zensical](https://zensical.org/), configured in `zensical.toml`. The `classic`
-theme variant preserves the appearance of the former Material for MkDocs site.
+[Zensical](https://zensical.org/), configured in `zensical.toml`. It uses Zensical's `modern` theme variant; set
+`variant = "classic"` in `zensical.toml` to restore the former Material for
+MkDocs appearance.
 
 - Site: https://sattwik-sahu.github.io/contact_graspnet_ros/
 - Source: `docs/`
