@@ -11,9 +11,10 @@ README banner.
 
 ![3-D plot of the top 10 grasp proposals](assets/grasps-3d.png)
 
-The teal points are the sampled mesh surface. Each labelled marker is a
-gripper origin, the short bar is the predicted finger separation (`width`), and
-the arrow is the approach direction (`+Z`). Colour encodes grasp score.
+The teal points are the sampled mesh surface. Each numbered grasp is drawn as
+a parallel-jaw gripper: two finger lines separated by the predicted opening
+(`width`), a base bar between them, a wrist stem behind the base, and a small
+arrow showing the approach direction (`+Z`). Colour encodes grasp score.
 
 For this run a 1.9 MB PLY mesh (`Lucy100k.ply` from the three.js example models)
 was downloaded, 20 000 surface points were sampled, and the engine returned

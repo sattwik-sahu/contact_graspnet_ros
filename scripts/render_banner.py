@@ -35,12 +35,12 @@ def _parse_args() -> argparse.Namespace:
 
 def _plot(data: np.lib.npyio.NpzFile, top: int, caption: str, path: Path) -> None:
     points, poses = data["points"], data["poses"]
-    scores, widths, contacts = data["scores"], data["widths"], data["contacts"]
+    scores, widths = data["scores"], data["widths"]
 
     rng = np.random.default_rng(0)
     sample = points[rng.choice(len(points), size=min(6000, len(points)), replace=False)]
 
-    fig = plt.figure(figsize=(12, 7.5), facecolor=BG)
+    fig = plt.figure(figsize=(14, 9), facecolor=BG)
     ax = fig.add_subplot(111, projection="3d")
     ax.set_facecolor(BG)
     for pane in (ax.xaxis.pane, ax.yaxis.pane, ax.zaxis.pane):
@@ -55,25 +55,45 @@ def _plot(data: np.lib.npyio.NpzFile, top: int, caption: str, path: Path) -> Non
     order = np.argsort(scores)[::-1][:top]
     cmap = plt.get_cmap("plasma")
     score_min, score_max = float(scores.min()), float(scores.max())
+    drawn: list[np.ndarray] = []
     for rank, idx in enumerate(order):
         color = cmap(0.15 + 0.85 * (scores[idx] - score_min) /
                      max(score_max - score_min, 1e-6))
         pose, rot = poses[idx], poses[idx][:3, :3]
         origin, x_axis, z_axis = pose[:3, 3], rot[:, 0], rot[:, 2]
-        contact, width = contacts[idx], float(widths[idx])
+        width = float(widths[idx])
+        half = 0.5 * width
 
-        p1 = contact - 0.5 * width * x_axis
-        p2 = contact + 0.5 * width * x_axis
-        ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]], color=color, lw=2.4)
+        # Parallel-jaw gripper: two fingers, a base bar and the wrist stem.
+        # +Z is the approach axis; the finger tips lie at the contact plane
+        # (0.1034 m in front of the gripper-base origin).
+        tip = origin + 0.1034 * z_axis
+        back = origin + 0.045 * z_axis
+        stem = origin - 0.05 * z_axis
+        left_tip, right_tip = tip - half * x_axis, tip + half * x_axis
+        left_back, right_back = back - half * x_axis, back + half * x_axis
+
+        for start, end in (
+            (left_back, left_tip),      # left finger: | 
+            (right_back, right_tip),    # right finger:    |
+            (left_back, right_back),    # base bar: ------
+            (back, stem),               # wrist stem:   |
+        ):
+            ax.plot([start[0], end[0]], [start[1], end[1]], [start[2], end[2]],
+                    color=color, lw=2.2)
+            drawn.extend((start, end))
+
+        ax.scatter([left_tip[0], right_tip[0]],
+                   [left_tip[1], right_tip[1]],
+                   [left_tip[2], right_tip[2]],
+                   color=color, s=16, depthshade=False)
         ax.quiver(origin[0], origin[1], origin[2], z_axis[0], z_axis[1], z_axis[2],
-                  length=0.055, color=color, linewidth=1.6, arrow_length_ratio=0.25)
-        ax.scatter([contact[0]], [contact[1]], [contact[2]], color=color, s=22,
-                   depthshade=False)
+                  length=0.03, color=color, linewidth=1.2, arrow_length_ratio=0.3)
         ax.text(origin[0], origin[1], origin[2], f" {rank + 1}", color=color, fontsize=8)
 
-    origins = poses[order][:, :3, 3]
-    mins = np.minimum(sample.min(axis=0), origins.min(axis=0)) - 0.015
-    maxs = np.maximum(sample.max(axis=0), origins.max(axis=0)) + 0.015
+    drawn_points = np.vstack(drawn) if drawn else poses[order][:, :3, 3]
+    mins = np.minimum(sample.min(axis=0), drawn_points.min(axis=0)) - 0.015
+    maxs = np.maximum(sample.max(axis=0), drawn_points.max(axis=0)) + 0.015
     ax.set_xlim(mins[0], maxs[0])
     ax.set_ylim(mins[1], maxs[1])
     ax.set_zlim(mins[2], maxs[2])
@@ -88,13 +108,13 @@ def _plot(data: np.lib.npyio.NpzFile, top: int, caption: str, path: Path) -> Non
                  color="#e6edf7", fontsize=13, pad=12)
 
     fig.subplots_adjust(left=0.03, right=0.98, bottom=0.05, top=0.90)
-    fig.savefig(path, dpi=150, facecolor=BG)
+    fig.savefig(path, dpi=180, facecolor=BG)
     plt.close(fig)
 
 
 def _banner(plot_path: Path, out_path: Path, top: int, caption: str, count: int) -> None:
     plot = Image.open(plot_path).convert("RGB")
-    width, height = 1800, 620
+    width, height = 2200, 820
     banner = Image.new("RGB", (width, height), BG)
     draw = ImageDraw.Draw(banner)
 
@@ -104,25 +124,25 @@ def _banner(plot_path: Path, out_path: Path, top: int, caption: str, count: int)
     banner.paste(plot, (width - plot_width - 20, 20))
 
     font_dir = Path(matplotlib.get_data_path()) / "fonts" / "ttf"
-    title = ImageFont.truetype(str(font_dir / "DejaVuSans-Bold.ttf"), 62)
-    sub = ImageFont.truetype(str(font_dir / "DejaVuSans.ttf"), 27)
-    small = ImageFont.truetype(str(font_dir / "DejaVuSans.ttf"), 21)
+    title = ImageFont.truetype(str(font_dir / "DejaVuSans-Bold.ttf"), 76)
+    sub = ImageFont.truetype(str(font_dir / "DejaVuSans.ttf"), 32)
+    small = ImageFont.truetype(str(font_dir / "DejaVuSans.ttf"), 24)
 
-    left, y = 70, 120
+    left, y = 80, 150
     draw.text((left, y), "Contact-GraspNet", font=title, fill="#f7fafc")
-    draw.text((left, y + 78), "ROS 2", font=title, fill="#4fd1c5")
-    draw.text((left, y + 178), "Depth + mask + intrinsics", font=sub, fill="#c7d2e0")
-    draw.text((left, y + 216), "→ 6-DoF grasp proposals", font=sub, fill="#c7d2e0")
+    draw.text((left, y + 96), "ROS 2", font=title, fill="#4fd1c5")
+    draw.text((left, y + 220), "Depth + mask + intrinsics", font=sub, fill="#c7d2e0")
+    draw.text((left, y + 266), "→ 6-DoF grasp proposals", font=sub, fill="#c7d2e0")
 
-    for offset, label in ((0, "ROS 2 · Jazzy"), (268, "Zensical docs")):
+    for offset, label in ((0, "ROS 2 · Jazzy"), (318, "Zensical docs")):
         draw.rounded_rectangle(
-            (left + offset, y + 290, left + offset + 250, y + 334),
+            (left + offset, y + 350, left + offset + 290, y + 402),
             radius=10, fill="#16233c", outline="#2c3e5e", width=2,
         )
-        draw.text((left + offset + 18, y + 298), label, font=small, fill="#9fb3c8")
+        draw.text((left + offset + 20, y + 360), label, font=small, fill="#9fb3c8")
 
     draw.text(
-        (left, height - 78),
+        (left, height - 90),
         f"Sample: {caption} · {count} proposals · top {top} shown",
         font=small, fill="#7c8ba1",
     )
